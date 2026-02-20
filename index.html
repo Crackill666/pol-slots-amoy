@@ -1,0 +1,94 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>POL Slots (Amoy)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="bg-grid"></div>
+    <main class="app">
+      <header class="panel header-panel">
+        <div>
+          <h1>POL Slots (Amoy)</h1>
+          <p class="subtitle">MVP testnet on-chain en Polygon Amoy</p>
+        </div>
+        <div class="header-meta">
+          <p id="walletStatus">Wallet: desconectada</p>
+          <p id="chainStatus">Red: -</p>
+          <p id="bankStatus">Bank: - POL</p>
+          <button id="connectBtn" class="ghost-btn">Conectar wallet</button>
+        </div>
+      </header>
+
+      <section class="panel machine-panel">
+        <div class="payline"></div>
+        <div class="reels" id="reels">
+          <div class="reel" id="reel1">🎰</div>
+          <div class="reel" id="reel2">🎰</div>
+          <div class="reel" id="reel3">🎰</div>
+        </div>
+
+        <button id="spinBtn" class="spin-btn" disabled>SPIN - 1 POL</button>
+        <p id="statusMsg" class="status-msg">Conectá tu wallet para jugar.</p>
+      </section>
+
+      <section class="panel payouts-panel">
+        <h2>Tabla de premios y probabilidades</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Probabilidad</th>
+              <th>Payout</th>
+              <th>Resultado UI</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>12,00%</td><td>0,00 POL</td><td>Perdiste</td></tr>
+            <tr><td>58,00%</td><td>0,95 POL</td><td>Recuperaste 0,95 POL</td></tr>
+            <tr><td>24,00%</td><td>1,00 POL</td><td>Empate - 1,00 POL</td></tr>
+            <tr><td>5,00%</td><td>1,10 POL</td><td>¡Ganaste 1,10 POL!</td></tr>
+            <tr><td>0,90%</td><td>3,00 POL</td><td>¡Ganaste 3,00 POL!</td></tr>
+            <tr><td>0,10%</td><td>8,00 POL</td><td>🎉 ¡GRAN PREMIO! 8,00 POL</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="panel history-panel">
+        <h2>Últimas 5 tiradas</h2>
+        <ul id="historyList">
+          <li class="empty-history">Sin tiradas todavía.</li>
+        </ul>
+      </section>
+
+      <section id="ownerPanel" class="panel owner-panel hidden">
+        <h2>Banco (Owner)</h2>
+        <p id="ownerInfo" class="owner-info">Solo visible para el owner del contrato.</p>
+
+        <div class="owner-actions">
+          <div class="owner-action-card">
+            <label for="depositAmount">Depositar POL</label>
+            <input id="depositAmount" type="text" inputmode="decimal" value="1.00" />
+            <button id="depositBtn" class="owner-btn">Depositar</button>
+          </div>
+
+          <div class="owner-action-card">
+            <label for="withdrawAmount">Retirar POL</label>
+            <input id="withdrawAmount" type="text" inputmode="decimal" value="1.00" />
+            <button id="withdrawBtn" class="owner-btn">Retirar</button>
+          </div>
+        </div>
+
+        <p id="ownerStatus" class="owner-status"></p>
+      </section>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
