@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
@@ -15,12 +15,13 @@
     <div class="bg-grid"></div>
     <main class="app">
       <header class="panel header-panel">
-        <div>
-          <h1>POL Slots (Amoy)</h1>
-          <p class="subtitle">MVP testnet on-chain en Polygon Amoy</p>
+        <div class="brand-block">
+          <img src="./assets/Logo2MN.png" alt="POL-SLOT logo" class="brand-logo" />
+          <h1>POL-SLOT</h1>
         </div>
         <div class="header-meta">
           <p id="walletStatus">Wallet: desconectada</p>
+          <p id="playerBalance" class="balance-chip">Saldo wallet: - POL</p>
           <p id="chainStatus">Red: -</p>
           <p id="bankStatus">Bank: - POL</p>
           <button id="connectBtn" class="ghost-btn">Conectar wallet</button>
@@ -36,7 +37,7 @@
         </div>
 
         <button id="spinBtn" class="spin-btn" disabled>SPIN - 1 POL</button>
-        <p id="statusMsg" class="status-msg">Conectá tu wallet para jugar.</p>
+        <p id="statusMsg" class="status-msg">Conecta tu wallet para jugar.</p>
       </section>
 
       <section class="panel payouts-panel">
@@ -50,20 +51,22 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>12,00%</td><td>0,00 POL</td><td>Perdiste</td></tr>
-            <tr><td>58,00%</td><td>0,95 POL</td><td>Recuperaste 0,95 POL</td></tr>
-            <tr><td>24,00%</td><td>1,00 POL</td><td>Empate - 1,00 POL</td></tr>
-            <tr><td>5,00%</td><td>1,10 POL</td><td>¡Ganaste 1,10 POL!</td></tr>
-            <tr><td>0,90%</td><td>3,00 POL</td><td>¡Ganaste 3,00 POL!</td></tr>
-            <tr><td>0,10%</td><td>8,00 POL</td><td>🎉 ¡GRAN PREMIO! 8,00 POL</td></tr>
+            <tr><td>38,00%</td><td>0,00 POL</td><td>&#10060; Perdiste</td></tr>
+            <tr><td>32,00%</td><td>1,00 POL</td><td>&#128737;&#65039; Recuperaste 1,00 POL</td></tr>
+            <tr><td>16,00%</td><td>1,25 POL</td><td>&#127873; Ganaste 1,25 POL</td></tr>
+            <tr><td>8,50%</td><td>2,00 POL</td><td>&#11088; Ganaste 2,00 POL!</td></tr>
+            <tr><td>3,50%</td><td>3,00 POL</td><td>&#128081; Ganaste 3,00 POL!</td></tr>
+            <tr><td>1,50%</td><td>5,00 POL</td><td>&#128293; Ganaste 5,00 POL!</td></tr>
+            <tr><td>0,40%</td><td>10,00 POL</td><td>&#128142; MEGA PREMIO! 10,00 POL</td></tr>
+            <tr><td>0,10%</td><td>30,00 POL</td><td>&#127942; JACKPOT! 30,00 POL</td></tr>
           </tbody>
         </table>
       </section>
 
       <section class="panel history-panel">
-        <h2>Últimas 5 tiradas</h2>
+        <h2>Ultimas 5 tiradas</h2>
         <ul id="historyList">
-          <li class="empty-history">Sin tiradas todavía.</li>
+          <li class="empty-history">Sin tiradas todavia.</li>
         </ul>
       </section>
 

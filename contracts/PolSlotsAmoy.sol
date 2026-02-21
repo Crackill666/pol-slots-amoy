@@ -5,25 +5,29 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract PolSlotsAmoy is Ownable {
     uint256 public constant WAGER = 1e18; // 1 POL
-    uint256 public constant MAX_PAYOUT = 8e18; // 8 POL
+    uint256 public constant MAX_PAYOUT = 30e18; // 30 POL
 
     // Probabilidades en basis points (10000 = 100%).
-    uint16 private constant BP_LOSE = 1200; // 12.0%
-    uint16 private constant BP_RETURN_095 = 5800; // 58.0%
-    uint16 private constant BP_RETURN_100 = 2400; // 24.0%
-    uint16 private constant BP_WIN_110 = 500; // 5.0%
-    uint16 private constant BP_WIN_300 = 90; // 0.9%
-    uint16 private constant BP_WIN_800 = 10; // 0.1%
+    uint16 private constant BP_LOSE = 3800; // 38.00%
+    uint16 private constant BP_RETURN_100 = 3200; // 32.00%
+    uint16 private constant BP_WIN_125 = 1600; // 16.00%
+    uint16 private constant BP_WIN_200 = 850; // 8.50%
+    uint16 private constant BP_WIN_300 = 350; // 3.50%
+    uint16 private constant BP_WIN_500 = 150; // 1.50%
+    uint16 private constant BP_WIN_1000 = 40; // 0.40%
+    uint16 private constant BP_WIN_3000 = 10; // 0.10%
 
     uint256 public nonce;
 
     // outcomeCode:
     // 0 => 0.00 POL
-    // 1 => 0.95 POL
-    // 2 => 1.00 POL
-    // 3 => 1.10 POL
+    // 1 => 1.00 POL
+    // 2 => 1.25 POL
+    // 3 => 2.00 POL
     // 4 => 3.00 POL
-    // 5 => 8.00 POL
+    // 5 => 5.00 POL
+    // 6 => 10.00 POL
+    // 7 => 30.00 POL
     event SpinResult(
         address indexed player,
         uint256 wager,
@@ -103,19 +107,19 @@ contract PolSlotsAmoy is Ownable {
             return (0, 0);
         }
 
-        cursor += BP_RETURN_095;
-        if (roll < cursor) {
-            return (1, 95e16); // 0.95 POL
-        }
-
         cursor += BP_RETURN_100;
         if (roll < cursor) {
-            return (2, 1e18); // 1.00 POL
+            return (1, 1e18); // 1.00 POL
         }
 
-        cursor += BP_WIN_110;
+        cursor += BP_WIN_125;
         if (roll < cursor) {
-            return (3, 11e17); // 1.10 POL
+            return (2, 125e16); // 1.25 POL
+        }
+
+        cursor += BP_WIN_200;
+        if (roll < cursor) {
+            return (3, 2e18); // 2.00 POL
         }
 
         cursor += BP_WIN_300;
@@ -123,7 +127,16 @@ contract PolSlotsAmoy is Ownable {
             return (4, 3e18); // 3.00 POL
         }
 
-        // Resto: 0.1%
-        return (5, 8e18); // 8.00 POL
+        cursor += BP_WIN_500;
+        if (roll < cursor) {
+            return (5, 5e18); // 5.00 POL
+        }
+
+        cursor += BP_WIN_1000;
+        if (roll < cursor) {
+            return (6, 10e18); // 10.00 POL
+        }
+
+        return (7, 30e18); // 30.00 POL
     }
 }

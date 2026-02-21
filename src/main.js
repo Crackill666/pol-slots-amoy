@@ -25,6 +25,7 @@ const ABI = [
 
 const ui = {
   walletStatus: document.getElementById("walletStatus"),
+  playerBalance: document.getElementById("playerBalance"),
   chainStatus: document.getElementById("chainStatus"),
   bankStatus: document.getElementById("bankStatus"),
   connectBtn: document.getElementById("connectBtn"),
@@ -48,16 +49,18 @@ const symbols = {
   low: ["🍒", "🍋"],
   mid: ["⭐", "🔔"],
   high: ["💎", "7", "👑"],
-  misc: ["🍀", "🎲", "🪙", "💠", "⚡", "🛰️", "🛸", "🧿"]
+  misc: ["🍀", "🎲", "🪙", "✨", "⚡", "🚀", "🎯", "🔥"]
 };
 
 const outcomeMessage = {
   0: "Perdiste",
-  1: "Recuperaste 0,95 POL",
-  2: "Empate - 1,00 POL",
-  3: "¡Ganaste 1,10 POL!",
-  4: "¡Ganaste 3,00 POL!",
-  5: "🎉 ¡GRAN PREMIO! 8,00 POL"
+  1: "Recuperaste 1,00 POL",
+  2: "Ganaste 1,25 POL",
+  3: "Ganaste 2,00 POL!",
+  4: "Ganaste 3,00 POL!",
+  5: "Ganaste 5,00 POL!",
+  6: "MEGA PREMIO! 10,00 POL",
+  7: "JACKPOT! 30,00 POL"
 };
 
 let browserProvider;
@@ -149,11 +152,20 @@ function buildReelCombo(outcomeCode) {
     return picks;
   }
 
-  if (outcomeCode === 1 || outcomeCode === 2) {
+  if (outcomeCode === 1) {
     const same = randomFrom([...symbols.low, ...symbols.misc]);
     let diff = randomFrom([...symbols.mid, ...symbols.misc, ...symbols.high]);
     while (diff === same) {
       diff = randomFrom([...symbols.mid, ...symbols.misc, ...symbols.high]);
+    }
+    return [same, same, diff].sort(() => Math.random() - 0.5);
+  }
+
+  if (outcomeCode === 2) {
+    const same = randomFrom(symbols.mid);
+    let diff = randomFrom([...symbols.low, ...symbols.misc, ...symbols.high]);
+    while (diff === same) {
+      diff = randomFrom([...symbols.low, ...symbols.misc, ...symbols.high]);
     }
     return [same, same, diff].sort(() => Math.random() - 0.5);
   }
@@ -168,8 +180,15 @@ function buildReelCombo(outcomeCode) {
     return [mid, mid, mid];
   }
 
-  const high = randomFrom(symbols.high);
-  return [high, high, high];
+  if (outcomeCode === 5) {
+    return ["7", "7", "7"];
+  }
+
+  if (outcomeCode === 6) {
+    return ["💎", "💎", "💎"];
+  }
+
+  return ["👑", "👑", "👑"];
 }
 
 function startSpinning() {
@@ -199,7 +218,7 @@ function throwConfetti() {
 
 function renderHistory() {
   if (history.length === 0) {
-    ui.historyList.innerHTML = '<li class="empty-history">Sin tiradas todavía.</li>';
+    ui.historyList.innerHTML = '<li class="empty-history">Sin tiradas todavia.</li>';
     return;
   }
 
@@ -212,7 +231,7 @@ function renderHistory() {
 
 async function updateBankBalance(providerToUse) {
   if (!CONTRACT_ADDRESS) {
-    ui.bankStatus.textContent = "Bank: configurá VITE_CONTRACT_ADDRESS";
+    ui.bankStatus.textContent = "Bank: configura VITE_CONTRACT_ADDRESS";
     return;
   }
 
@@ -221,6 +240,20 @@ async function updateBankBalance(providerToUse) {
     ui.bankStatus.textContent = `Bank: ${formatPol(bank)} POL`;
   } catch {
     ui.bankStatus.textContent = "Bank: error al leer balance";
+  }
+}
+
+async function updatePlayerBalance(providerToUse) {
+  if (!userAddress) {
+    ui.playerBalance.textContent = "Saldo wallet: - POL";
+    return;
+  }
+
+  try {
+    const walletBalance = await providerToUse.getBalance(userAddress);
+    ui.playerBalance.textContent = `Saldo wallet: ${formatPol(walletBalance)} POL`;
+  } catch {
+    ui.playerBalance.textContent = "Saldo wallet: error al leer balance";
   }
 }
 
@@ -234,7 +267,7 @@ async function ensureAmoyNetwork() {
   }
 
   ui.chainStatus.textContent = `Red: incorrecta (${chainId})`;
-  setMessage("Cambiá a Polygon Amoy para jugar.", "status-pending");
+  setMessage("Cambia a Polygon Amoy para jugar.", "status-pending");
 
   try {
     await window.ethereum.request({
@@ -265,7 +298,7 @@ async function ensureAmoyNetwork() {
 
 async function connectWallet() {
   if (!window.ethereum) {
-    setMessage("Instalá MetaMask para jugar.", "status-lose");
+    setMessage("Instala MetaMask para jugar.", "status-lose");
     return;
   }
 
@@ -292,6 +325,7 @@ async function connectWallet() {
   ui.spinBtn.disabled = !onRightNetwork;
   if (onRightNetwork) {
     setMessage("Listo para jugar. Cada spin cuesta 1 POL.");
+    await updatePlayerBalance(browserProvider);
   }
 
   try {
@@ -309,6 +343,7 @@ async function connectWallet() {
   }
 
   await updateBankBalance(browserProvider);
+  await updatePlayerBalance(browserProvider);
 }
 
 async function doSpin() {
@@ -323,13 +358,13 @@ async function doSpin() {
   }
 
   ui.spinBtn.disabled = true;
-  setMessage("Confirmá en tu wallet...", "status-pending");
+  setMessage("Confirma en tu wallet...", "status-pending");
 
   try {
     const txOverrides = await buildSpinTxOverrides();
     const tx = await contract.spin(txOverrides);
 
-    setMessage("Transacción pendiente...", "status-pending");
+    setMessage("Transaccion pendiente...", "status-pending");
     startSpinning();
 
     const receipt = await tx.wait();
@@ -349,7 +384,7 @@ async function doSpin() {
     }
 
     if (!parsed) {
-      throw new Error("No se encontró evento SpinResult en receipt.");
+      throw new Error("No se encontro evento SpinResult en receipt.");
     }
 
     const outcomeCode = Number(parsed.outcomeCode);
@@ -363,7 +398,7 @@ async function doSpin() {
     const mode = outcomeCode === 0 ? "status-lose" : "status-win";
     setMessage(msg, mode);
 
-    if (outcomeCode === 5) {
+    if (outcomeCode >= 6) {
       ui.reels.classList.add("jackpot-flash");
       throwConfetti();
       setTimeout(() => ui.reels.classList.remove("jackpot-flash"), 2300);
@@ -379,6 +414,7 @@ async function doSpin() {
     renderHistory();
 
     await updateBankBalance(browserProvider);
+    await updatePlayerBalance(browserProvider);
   } catch (error) {
     stopSpinning();
 
@@ -433,6 +469,7 @@ async function handleDeposit() {
     await tx.wait();
     setOwnerStatus(`Deposito confirmado: ${amountText} POL`, "status-win");
     await updateBankBalance(browserProvider);
+    await updatePlayerBalance(browserProvider);
   } catch (error) {
     const reason = error?.shortMessage || error?.reason || error?.message || "Error en deposito";
     setOwnerStatus(reason, "status-lose");
@@ -461,6 +498,7 @@ async function handleWithdraw() {
     await tx.wait();
     setOwnerStatus(`Retiro confirmado: ${amountText} POL`, "status-win");
     await updateBankBalance(browserProvider);
+    await updatePlayerBalance(browserProvider);
   } catch (error) {
     const reason = error?.shortMessage || error?.reason || error?.message || "Error en retiro";
     setOwnerStatus(reason, "status-lose");
