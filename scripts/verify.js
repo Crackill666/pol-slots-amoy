@@ -1,10 +1,20 @@
+﻿const fs = require("fs");
+const path = require("path");
 const hre = require("hardhat");
 
 async function main() {
-  const contractAddress = process.env.CONTRACT_ADDRESS;
+  let contractAddress = process.env.CONTRACT_ADDRESS;
 
   if (!contractAddress) {
-    throw new Error("Set CONTRACT_ADDRESS in .env before verify.");
+    const frontendInfoPath = path.join(__dirname, "..", "src", "contract-info.json");
+    if (fs.existsSync(frontendInfoPath)) {
+      const parsed = JSON.parse(fs.readFileSync(frontendInfoPath, "utf8"));
+      contractAddress = parsed.address;
+    }
+  }
+
+  if (!contractAddress) {
+    throw new Error("Set CONTRACT_ADDRESS in .env or deploy first so src/contract-info.json exists.");
   }
 
   await hre.run("verify:verify", {

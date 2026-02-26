@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --bg: #05060f;
   --panel: rgba(14, 18, 36, 0.85);
   --ink: #e9f1ff;
@@ -132,6 +132,26 @@ h2 {
   overflow: hidden;
 }
 
+.jackpot-panel {
+  display: grid;
+  gap: 8px;
+}
+
+.jackpot-chip {
+  color: #ffe8a8;
+  background: rgba(255, 212, 121, 0.1);
+  border: 1px solid rgba(255, 212, 121, 0.35);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.jackpot-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
 .owner-panel {
   display: grid;
   gap: 10px;
@@ -192,6 +212,8 @@ h2 {
 }
 
 .reels {
+  --reel-height: 96px;
+  --reel-border: 1px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
@@ -209,30 +231,60 @@ h2 {
 }
 
 .reel {
-  min-height: 92px;
+  height: var(--reel-height);
   border-radius: 14px;
-  display: grid;
-  place-items: center;
-  font-size: 2.15rem;
+  position: relative;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01));
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: inset 0 0 15px rgba(49, 216, 255, 0.15);
+  overflow: hidden;
+}
+
+.reel-window {
+  height: calc(var(--reel-height) - (var(--reel-border) * 2));
+  overflow: hidden;
+}
+
+.reel-track {
+  display: flex;
+  flex-direction: column;
+  transform: translateY(0);
+  will-change: transform;
+}
+
+.reel-symbol {
+  height: calc(var(--reel-height) - (var(--reel-border) * 2));
+  display: grid;
+  place-items: center;
+  font-size: 2.15rem;
+  line-height: 1;
+  font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+  text-shadow: 0 0 10px rgba(49, 216, 255, 0.25);
+}
+
+.reel::before,
+.reel::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 22px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.reel::before {
+  top: 0;
+  background: linear-gradient(180deg, rgba(5, 6, 15, 0.78), rgba(5, 6, 15, 0));
+}
+
+.reel::after {
+  bottom: 0;
+  background: linear-gradient(0deg, rgba(5, 6, 15, 0.78), rgba(5, 6, 15, 0));
 }
 
 .reels.spinning .reel {
-  animation: pulse 0.25s linear infinite;
-}
-
-@keyframes pulse {
-  0% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(1px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
+  filter: brightness(1.06);
 }
 
 .spin-btn {
@@ -254,6 +306,14 @@ h2 {
   min-height: 29px;
   font-size: 1.02rem;
   font-weight: 700;
+}
+
+.jackpot-hit-banner {
+  margin-top: 10px;
+  color: #ffe8a8;
+  font-weight: 800;
+  font-size: 1.08rem;
+  text-shadow: 0 0 16px rgba(255, 212, 121, 0.5);
 }
 
 .status-pending {
@@ -300,6 +360,17 @@ td {
 th {
   color: var(--muted);
   font-weight: 600;
+}
+
+.reward-icon {
+  font-size: 1.1rem;
+  letter-spacing: 0.01em;
+}
+
+.prob-with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .history-panel ul {
@@ -351,9 +422,11 @@ th {
     grid-template-columns: 1fr auto;
     align-items: center;
   }
+  .reels {
+    --reel-height: 120px;
+  }
 
-  .reel {
-    min-height: 120px;
+  .reel-symbol {
     font-size: 2.8rem;
   }
 
@@ -366,3 +439,5 @@ th {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+

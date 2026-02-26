@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
@@ -28,39 +28,56 @@
         </div>
       </header>
 
+      <section class="panel jackpot-panel" id="jackpotPanel">
+        <h2>Jackpot Global</h2>
+        <p id="jackpotStatus" class="jackpot-chip">JACKPOT ACUMULADO: - POL</p>
+        <p id="blockSpinsStatus" class="jackpot-meta">Spins del bloque: -/100</p>
+      </section>
+
       <section class="panel machine-panel">
         <div class="payline"></div>
         <div class="reels" id="reels">
-          <div class="reel" id="reel1">🎰</div>
-          <div class="reel" id="reel2">🎰</div>
-          <div class="reel" id="reel3">🎰</div>
+          <div class="reel" id="reel1">
+            <div class="reel-window">
+              <div class="reel-track" id="track1"></div>
+            </div>
+          </div>
+          <div class="reel" id="reel2">
+            <div class="reel-window">
+              <div class="reel-track" id="track2"></div>
+            </div>
+          </div>
+          <div class="reel" id="reel3">
+            <div class="reel-window">
+              <div class="reel-track" id="track3"></div>
+            </div>
+          </div>
         </div>
 
         <button id="spinBtn" class="spin-btn" disabled>SPIN - 1 POL</button>
         <p id="statusMsg" class="status-msg">Conecta tu wallet para jugar.</p>
+        <p id="jackpotHitBanner" class="jackpot-hit-banner hidden">JACKPOT HIT!</p>
       </section>
 
       <section class="panel payouts-panel">
-        <h2>Tabla de premios y probabilidades</h2>
+        <h2>Tabla base (cuando NO cae jackpot)</h2>
         <table>
           <thead>
             <tr>
               <th>Probabilidad</th>
+              <th>Multiplicador</th>
               <th>Payout</th>
-              <th>Resultado UI</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>38,00%</td><td>0,00 POL</td><td>&#10060; Perdiste</td></tr>
-            <tr><td>32,00%</td><td>1,00 POL</td><td>&#128737;&#65039; Recuperaste 1,00 POL</td></tr>
-            <tr><td>16,00%</td><td>1,25 POL</td><td>&#127873; Ganaste 1,25 POL</td></tr>
-            <tr><td>8,50%</td><td>2,00 POL</td><td>&#11088; Ganaste 2,00 POL!</td></tr>
-            <tr><td>3,50%</td><td>3,00 POL</td><td>&#128081; Ganaste 3,00 POL!</td></tr>
-            <tr><td>1,50%</td><td>5,00 POL</td><td>&#128293; Ganaste 5,00 POL!</td></tr>
-            <tr><td>0,40%</td><td>10,00 POL</td><td>&#128142; MEGA PREMIO! 10,00 POL</td></tr>
-            <tr><td>0,10%</td><td>30,00 POL</td><td>&#127942; JACKPOT! 30,00 POL</td></tr>
+            <tr><td><span class="prob-with-icon">56,90% <span class="reward-icon">&#10060;</span></span></td><td>x0</td><td>0,00 POL</td></tr>
+            <tr><td><span class="prob-with-icon">17,80% <span class="reward-icon">&#127873;</span></span></td><td>x1,2</td><td>1,20 POL</td></tr>
+            <tr><td><span class="prob-with-icon">20,50% <span class="reward-icon">&#11088;</span></span></td><td>x2</td><td>2,00 POL</td></tr>
+            <tr><td><span class="prob-with-icon">4,50% <span class="reward-icon">&#128293;</span></span></td><td>x5</td><td>5,00 POL</td></tr>
+            <tr><td><span class="prob-with-icon">0,30% <span class="reward-icon">&#128142;</span></span></td><td>x10</td><td>10,00 POL</td></tr>
           </tbody>
         </table>
+        <p class="jackpot-meta">Cada spin aporta 0,1 POL al jackpot global.</p>
       </section>
 
       <section class="panel history-panel">
@@ -71,20 +88,32 @@
       </section>
 
       <section id="ownerPanel" class="panel owner-panel hidden">
-        <h2>Banco (Owner)</h2>
+        <h2>Banco y Jackpot (Owner)</h2>
         <p id="ownerInfo" class="owner-info">Solo visible para el owner del contrato.</p>
 
         <div class="owner-actions">
           <div class="owner-action-card">
-            <label for="depositAmount">Depositar POL</label>
-            <input id="depositAmount" type="text" inputmode="decimal" value="1.00" />
-            <button id="depositBtn" class="owner-btn">Depositar</button>
+            <label for="depositBankAmount">Depositar Bank (POL)</label>
+            <input id="depositBankAmount" type="text" inputmode="decimal" value="10.00" />
+            <button id="depositBankBtn" class="owner-btn">Depositar Bank</button>
           </div>
 
           <div class="owner-action-card">
-            <label for="withdrawAmount">Retirar POL</label>
-            <input id="withdrawAmount" type="text" inputmode="decimal" value="1.00" />
-            <button id="withdrawBtn" class="owner-btn">Retirar</button>
+            <label for="withdrawBankAmount">Retirar Bank (POL)</label>
+            <input id="withdrawBankAmount" type="text" inputmode="decimal" value="1.00" />
+            <button id="withdrawBankBtn" class="owner-btn">Retirar Bank</button>
+          </div>
+
+          <div class="owner-action-card">
+            <label for="depositJackpotAmount">Depositar Jackpot (POL)</label>
+            <input id="depositJackpotAmount" type="text" inputmode="decimal" value="1.00" />
+            <button id="depositJackpotBtn" class="owner-btn">Depositar Jackpot</button>
+          </div>
+
+          <div class="owner-action-card">
+            <label for="withdrawJackpotAmount">Retirar Jackpot (POL)</label>
+            <input id="withdrawJackpotAmount" type="text" inputmode="decimal" value="1.00" />
+            <button id="withdrawJackpotBtn" class="owner-btn">Retirar Jackpot</button>
           </div>
         </div>
 
